@@ -1,0 +1,11 @@
+# 制御ループ周波数
+hz: 30              # ループ周波数 [Hz]
+
+# 初期位置
+init_x: 2.0         # x座標[m]
+init_y: 0.0         # y座標[m]
+init_theta: 0.0     # 生成する軌道の向き[rad]
+
+# 目標軌道
+cource_length: 7.0  # x軸方向の長さ
+resolution: 0.05    # 軌道生成時の刻み幅 [m]

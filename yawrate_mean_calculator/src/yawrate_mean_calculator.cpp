@@ -1,4 +1,4 @@
-#include <yawrate_mean_calculator/yawrate_mean_calculator.h>
+#include "yawrate_mean_calculator/yawrate_mean_calculator.h"
 
 YawrateMeanCalculator::YawrateMeanCalculator():private_nh_("~")
 {
@@ -78,11 +78,11 @@ void YawrateMeanCalculator::process()
     }
 }
 
-// メイン関数
-int main(int argc, char** argv)
-{
-    ros::init(argc, argv, "yawrate_mean_calculator");
-    YawrateMeanCalculator yawratemeancalculator;
-    yawratemeancalculator.process();
-    return 0;
-}
+// // メイン関数
+// int main(int argc, char** argv)
+// {
+//     ros::init(argc, argv, "yawrate_mean_calculator");
+//     YawrateMeanCalculator yawratemeancalculator;
+//     yawratemeancalculator.process();
+//     return 0;
+// }

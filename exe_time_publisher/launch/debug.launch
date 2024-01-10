@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- config file path -->
+    <arg name="exe_time_publisher_settings" default="$(find exe_time_publisher)/config/param/exe_time_publisher.yaml"/>
+
+    <!-- node launch -->
+    <node pkg="exe_time_publisher" type="exe_time_publisher_node" name="exe_time_publisher" output="screen">
+        <rosparam command="load" file="$(arg exe_time_publisher_settings)"/>
+    </node>
+    <node pkg="rosbag" type="play" name="play" args="$(env HOME)/bag/ccv40.bag --clock"/>
+</launch>

@@ -71,21 +71,69 @@ void HumanDistCalculator::calc_min_dist()
 void HumanDistCalculator::collision_counter(const int id)
 {
     // 2個前までidを参照し，一致しなかったら衝突した人のidを格納
-    if(collision_id_.size() == 0)  // セグフォ防止
+    // if(collision_id_.size() == 0)  // セグフォ防止
+    // {
+    //     collision_id_.push_back(id);
+    //     ROS_INFO_STREAM("id : " << id);  // 衝突した歩行者id
+    // }
+    // else if(collision_id_.size() == 1)  // セグフォ防止
+    // {
+    //     if(collision_id_.back() != id)
+    //     {
+    //         collision_id_.push_back(id);
+    //         ROS_INFO_STREAM("id : " << id);  // 衝突した歩行者id
+    //     }
+    // }
+    // else
+    // {
+    //     const int size = collision_id_.size();
+
+    //     if((collision_id_.back() != id) && (collision_id_[size-2] != id))
+    //     {
+    //         collision_id_.push_back(id);
+    //         ROS_INFO_STREAM("id : " << id);  // 衝突した歩行者id
+    //     }
+    // }
+
+    // ROS_INFO_STREAM("hit!");  // デバック用
+    // ROS_INFO_STREAM("id : " << id);  // 衝突した歩行者id
+
+    const int size = collision_id_.size();
+    bool flag_match = false;
+
+
+    // for(const auto& tmp_id : collision_id_)
+    // {
+    //     ROS_INFO_STREAM("tmp_id : " << tmp_id);  // 衝突した歩行者id
+    //     if(tmp_id != id)
+    //     {
+    //         collision_id_.push_back(id);
+    //         ROS_INFO_STREAM("id : " << id);  // 衝突した歩行者id
+    //     }
+    // }
+
+    if(collision_id_.size() == 0)
     {
         collision_id_.push_back(id);
-    }
-    else if(collision_id_.size() == 1)  // セグフォ防止
-    {
-        if(collision_id_.back() != id)
-            collision_id_.push_back(id);
+        ROS_INFO_STREAM("id : " << id);  // 衝突した歩行者id
     }
     else
     {
-        const int size = collision_id_.size();
+        for(int i; i<size; i++)
+        {
+            // ROS_INFO_STREAM("tmp_id : " << tmp_id);  // 衝突した歩行者id
+            if(collision_id_[i] == id)
+            {
+                flag_match = true;
+                break;
+            }
+        }
 
-        if((collision_id_.back() != id) && (collision_id_[size-2] != id))
+        if(flag_match == false)
+        {
             collision_id_.push_back(id);
+            ROS_INFO_STREAM("id : " << id);  // 衝突した歩行者id
+        }
     }
 }
 
@@ -95,8 +143,6 @@ void HumanDistCalculator::display_data()
     if((robot_odom_.pose.pose.position.x > start_x_) && (robot_odom_.pose.pose.position.x <= goal_x_))
     {
         calc_min_dist();
-
-        ROS_INFO_STREAM("x : " << robot_odom_.pose.pose.position.x);  // 最小値の平均
 
         // ロボットと歩行者の距離の最小値を更新
         if(min_dist_ < all_min_dist_)

@@ -7,5 +7,5 @@
     <node pkg="human_dist_calculator" type="human_dist_calculator_node" name="human_dist_calculator" output="screen">
         <rosparam command="load" file="$(arg human_dist_calculator_settings)"/>
     </node>
-    <node pkg="rosbag" type="play" name="play" args="$(env HOME)/bag/st50/3.bag --clock"/>
+    <node pkg="rosbag" type="play" name="play" args="$(env HOME)/bag/st1/1.bag --clock"/>
 </launch>

@@ -42,7 +42,6 @@ void ExeTimePublisher::calc_exe_time()
         // 実行時間を表示
         show_exe_time();
     }
-
 }
 
 // 実行時間を表示

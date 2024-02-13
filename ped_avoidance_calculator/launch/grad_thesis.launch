@@ -1,11 +1,12 @@
 <?xml version="1.0"?>
 <launch>
     <!-- 卒論用 -->
-    <!-- exe_time_publisher + human_dist_calculator -->
+    <!-- exe_time_publisher + human_dist_calculator + ped_avoidance_calculator -->
 
     <!-- config file path -->
     <arg name="exe_time_publisher_settings" default="$(find exe_time_publisher)/config/param/exe_time_publisher.yaml"/>
     <arg name="human_dist_calculator_settings" default="$(find human_dist_calculator)/config/param/human_dist_calculator.yaml"/>
+    <arg name="ped_avoidance_calculator_settings" default="$(find ped_avoidance_calculator)/config/param/ped_avoidance_calculator.yaml"/>
 
     <!-- node launch -->
     <node pkg="exe_time_publisher" type="exe_time_publisher_node" name="exe_time_publisher" output="screen">
@@ -14,5 +15,9 @@
     <node pkg="human_dist_calculator" type="human_dist_calculator_node" name="human_dist_calculator" output="screen">
         <rosparam command="load" file="$(arg human_dist_calculator_settings)"/>
     </node>
-    <node pkg="rosbag" type="play" name="play" args="$(env HOME)/bag/coco25/17.bag --clock"/>
+    <node pkg="ped_avoidance_calculator" type="ped_avoidance_calculator_node" name="ped_avoidance_calculator" output="screen">
+        <rosparam command="load" file="$(arg ped_avoidance_calculator_settings)"/>
+    </node>
+
+    <node pkg="rosbag" type="play" name="play" args="$(env HOME)/bag/nosteer1/20.bag --clock"/>
 </launch>

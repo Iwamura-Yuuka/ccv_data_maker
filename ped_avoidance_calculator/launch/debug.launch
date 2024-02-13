@@ -7,5 +7,5 @@
     <node pkg="ped_avoidance_calculator" type="ped_avoidance_calculator_node" name="ped_avoidance_calculator" output="screen">
         <rosparam command="load" file="$(arg ped_avoidance_calculator_settings)"/>
     </node>
-    <node pkg="rosbag" type="play" name="play" args="$(env HOME)/bag/st1/1.bag --clock"/>
+    <node pkg="rosbag" type="play" name="play" args="$(env HOME)/bag/coco1/35.bag --clock"/>
 </launch>

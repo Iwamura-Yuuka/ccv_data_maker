@@ -7,5 +7,5 @@
     <node pkg="yawrate_mean_calculator" type="yawrate_mean_calculator_node" name="yawrate_mean_calculator" output="screen">
         <rosparam command="load" file="$(arg yawrate_mean_calculator_settings)"/>
     </node>
-    <node pkg="rosbag" type="play" name="play" args="$(env HOME)/bag/ccv40.bag --clock"/>
+    <node pkg="rosbag" type="play" name="play" args="$(env HOME)/bagfiles/ccv40.bag --clock"/>
 </launch>

@@ -19,5 +19,5 @@
         <rosparam command="load" file="$(arg ped_avoidance_calculator_settings)"/>
     </node>
 
-    <node pkg="rosbag" type="play" name="play" args="$(env HOME)/bag/nosteer1/20.bag --clock"/>
+    <node pkg="rosbag" type="play" name="play" args="$(env HOME)/bagfiles/nosteer1/20.bag --clock"/>
 </launch>

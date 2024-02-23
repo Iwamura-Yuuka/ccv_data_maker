@@ -7,5 +7,5 @@
     <node pkg="rmse_calculator" type="rmse_calculator_node" name="rmse_calculator" output="screen">
         <rosparam command="load" file="$(arg rmse_calculator_settings)"/>
     </node>
-    <node pkg="rosbag" type="play" name="play" args="$(env HOME)/bag/ccv1.bag --clock"/>
+    <node pkg="rosbag" type="play" name="play" args="$(env HOME)/bagfiles/ccv1.bag --clock"/>
 </launch>

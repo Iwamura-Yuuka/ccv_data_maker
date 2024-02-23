@@ -4,6 +4,7 @@ HumanDistCalculator::HumanDistCalculator():private_nh_("~")
 {
     // param
     private_nh_.param("hz", hz_, {10});
+    private_nh_.param("hz", hz_, {10});
     private_nh_.param("start_x", start_x_, {1.0});
     private_nh_.param("goal_x", goal_x_, {18.0});
     private_nh_.param("collision_dist", collision_dist_, {0.2});

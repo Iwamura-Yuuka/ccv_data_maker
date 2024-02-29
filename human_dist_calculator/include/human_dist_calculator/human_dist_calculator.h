@@ -4,6 +4,9 @@
 #include <ros/ros.h>
 #include <queue>
 #include <nav_msgs/Odometry.h>
+#include <iostream>
+#include <cstdlib>
+#include <fstream>
 
 // original_msgs
 #include <pedsim_msgs/AgentState.h>
@@ -27,12 +30,14 @@ private:
     // 引数なし関数
     void calc_min_dist();  // ロボットと歩行者の距離の最小値を計算
     void display_data();   // 計算した値を表示
+    void output_csv();     // 結果をcsvファイルに出力
 
     // yamlファイルで設定可能な変数
-    int hz_;                 // ループ周波数 [Hz]
-    double start_x_;         // 計測を開始するx座標 [m]
-    double goal_x_;          // 計測を終了するx座標 [m]
-    double collision_dist_;  // 衝突した判定にするロボットと歩行者の距離
+    std::string output_file_;  // 出力ファイルパス
+    int hz_;                   // ループ周波数 [Hz]
+    double start_x_;           // 計測を開始するx座標 [m]
+    double goal_x_;            // 計測を終了するx座標 [m]
+    double collision_dist_;    // 衝突した判定にするロボットと歩行者の距離
 
     // 最小距離計算用
     double all_min_dist_;   // 1回のシミュレーション内でのロボットと歩行者の距離の最小値
@@ -47,6 +52,9 @@ private:
     // msgの受け取り判定用
     bool flag_ped_states_ = false;
     bool flag_robot_odom_ = false;
+
+    // ファイル出力の判定用
+    bool flag_output_file_ = false;
 
     // NodeHandle
     ros::NodeHandle nh_;

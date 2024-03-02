@@ -3,6 +3,9 @@
 
 #include <ros/ros.h>
 #include <queue>
+#include <iostream>
+#include <cstdlib>
+#include <fstream>
 
 // original_msgs
 #include <pedsim_msgs/AgentState.h>
@@ -20,11 +23,13 @@ private:
 
     // 引数なし関数
     void calc_avoidance();  // 回避量を計算
+    void output_csv();      // 結果をcsvファイルに出力
 
     // yamlファイルで設定可能な変数
-    int hz_;          // ループ周波数 [Hz]
-    double start_x_;  // 計算を開始するx座標 [m]
-    double goal_x_;   // 計算を終了するx座標 [m]
+    std::string output_file_;  // 出力ファイルパス
+    int hz_;                   // ループ周波数 [Hz]
+    double start_x_;           // 計算を開始するx座標 [m]
+    double goal_x_;            // 計算を終了するx座標 [m]
 
     // その他の変数
     double area_;   // 面積
@@ -37,6 +42,9 @@ private:
     // 計算開始・終了の判定用
     bool flag_start_ = false;
     bool flag_goal_ = false;
+
+    // ファイル出力の判定用
+    bool flag_output_file_ = false;
 
     // NodeHandle
     ros::NodeHandle nh_;

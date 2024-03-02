@@ -1,5 +1,5 @@
 # 出力ファイルパス
-output_file: "~/data/robomech2024/coco50/human_dist.csv"
+output_file: "/bagfiles/coco50/human_dist.csv"
 
 # 制御周波数[Hz]
 hz: 10               # ループ周波数 [Hz]

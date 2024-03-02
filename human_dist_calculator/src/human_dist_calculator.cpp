@@ -3,7 +3,7 @@
 HumanDistCalculator::HumanDistCalculator():private_nh_("~")
 {
     // param
-    private_nh_.param("output_file", output_file_, {"~/data/output.csv"});
+    private_nh_.param("output_file", output_file_, {"/data/output.csv"});
     private_nh_.param("hz", hz_, {10});
     private_nh_.param("start_x", start_x_, {1.0});
     private_nh_.param("goal_x", goal_x_, {18.0});
@@ -173,26 +173,40 @@ void HumanDistCalculator::display_data()
 // 結果をcsvファイルに出力
 void HumanDistCalculator::output_csv()
 {
-    std::string csv_path = "/bagfiles/coco50/human_dist.csv";
+    // std::string csv_path = "/bagfiles/coco50/human_dist.csv";
 
-    std::string file_path = getenv("HOME") + csv_path;
+    // std::string file_path = getenv("HOME") + csv_path;
 
-    std::ofstream ofs_csv_file;
-    // ofs_csv_file.open(file_path, std::ios_base::in | std::ios_base::out | std::ios_base::app);
-    ofs_csv_file.open(file_path, std::ios::app);
+    // std::ofstream ofs_csv_file;
+    // // ofs_csv_file.open(file_path, std::ios_base::in | std::ios_base::out | std::ios_base::app);
+    // ofs_csv_file.open(file_path, std::ios::app);
 
-    if(!ofs_csv_file.is_open())
-        ROS_WARN_STREAM("can't open file!");
+    // if(!ofs_csv_file.is_open())
+    //     ROS_WARN_STREAM("can't open file!");
+
+    // // csvファイルを開く(std::ofstreamのコンストラクタで開く)
+    // // ios_base::appで既存のファイルに追記
+    // // std::ofstream ofs_csv_file(file_path, std::ios_base::in | std::ios_base::out | std::ios_base::app);
+
+    // // データをファイルに書き込み
+    // ofs_csv_file << "hello!!" << std::endl;
+    // ofs_csv_file << min_dist_mean_ << ',' << all_min_dist_ << ',' << collision_id_.size() << ',';
+
+    // ofs_csv_file.close();
+
+    // getenv("HOME")でホームディレクトリのパスを取得
+    // std::string型で定義されたものが1つでも含まれていれば+で文字列をくっつけられる
+    std::string file_path = getenv("HOME") + output_file_;
 
     // csvファイルを開く(std::ofstreamのコンストラクタで開く)
-    // ios_base::appで既存のファイルに追記
-    // std::ofstream ofs_csv_file(file_path, std::ios_base::in | std::ios_base::out | std::ios_base::app);
+    // std::ios::appで既存のファイルに追記
+    std::ofstream ofs(file_path, std::ios::app);
+
+    if(!ofs.is_open())
+        ROS_WARN_STREAM("can't open file!");
 
     // データをファイルに書き込み
-    ofs_csv_file << "hello!!" << std::endl;
-    ofs_csv_file << min_dist_mean_ << ',' << all_min_dist_ << ',' << collision_id_.size() << ',';
-
-    ofs_csv_file.close();
+    ofs << min_dist_mean_ << ',' << all_min_dist_ << ',' << collision_id_.size() << ',' << std::endl;
 }
 
 //メイン文で実行する関数

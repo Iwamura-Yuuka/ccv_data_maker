@@ -1,3 +1,6 @@
+# 出力ファイルパス
+output_file: "/bagfiles/coco1/ped_avoid.csv"
+
 # 制御周波数[Hz]
 hz: 10                          # ループ周波数 [Hz]
 

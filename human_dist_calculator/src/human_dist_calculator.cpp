@@ -3,7 +3,7 @@
 HumanDistCalculator::HumanDistCalculator():private_nh_("~")
 {
     // param
-    private_nh_.param("hz", hz_, {10});
+    private_nh_.param("output_file", output_file_, {"/data/output.csv"});
     private_nh_.param("hz", hz_, {10});
     private_nh_.param("start_x", start_x_, {1.0});
     private_nh_.param("goal_x", goal_x_, {18.0});
@@ -160,7 +160,32 @@ void HumanDistCalculator::display_data()
         ROS_INFO_STREAM("mean of min dist : " << min_dist_mean_ << "m");  // 最小値の平均
         ROS_INFO_STREAM("min dist : " << all_min_dist_ << "m");           // 最小値
         ROS_INFO_STREAM("collision : " << collision_id_.size() << "times");  // 衝突回数
+
+        // データをcsvファイルに出力
+        if(flag_output_file_ == false)
+        {
+            output_csv();
+            flag_output_file_ = true;
+        }
     }
+}
+
+// 結果をcsvファイルに出力
+void HumanDistCalculator::output_csv()
+{
+    // getenv("HOME")でホームディレクトリのパスを取得
+    // std::string型で定義されたものが1つでも含まれていれば+で文字列をくっつけられる
+    std::string file_path = getenv("HOME") + output_file_;
+
+    // csvファイルを開く(std::ofstreamのコンストラクタで開く)
+    // std::ios::appで既存のファイルに追記
+    std::ofstream ofs(file_path, std::ios::app);
+
+    if(!ofs.is_open())
+        ROS_WARN_STREAM("can't open file!");
+
+    // データをファイルに書き込み
+    ofs << min_dist_mean_ << ',' << all_min_dist_ << ',' << collision_id_.size() << ',' << std::endl;
 }
 
 //メイン文で実行する関数

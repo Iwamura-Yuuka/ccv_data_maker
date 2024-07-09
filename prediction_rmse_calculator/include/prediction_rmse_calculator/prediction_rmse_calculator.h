@@ -1,4 +1,4 @@
-#include prediction_rmse_calculator/prediction_rmse_calculator.h
+#include "prediction_rmse_calculator/prediction_rmse_calculator.h"
 
 #include <ros/ros.h>
 #include <iostream>
@@ -27,6 +27,14 @@ private:
   void obs_data_callback(const std_msgs::Float32MultiArray::ConstPtr& msg);
 
   // 引数なし関数
+  void store_predicted_data();     // 予測データを格納
+  void calc_dist_squared_error();  // 位置に関する二乗誤差を計算
+  void calc_vel_squared_error();   // 速度に関する二乗誤差を計算
+  void calc_yaw_squared_error();   // 方位に関する二乗誤差を計算
+  void calc_rmse();                // RMSEを計算
+
+  // 引数あり関数
+  void output_csv(const std::string output_file, const std::vector<double> rmse);  // 結果をcsvファイルに出力する
 
   // yamlファイルで設定可能な変数
   std::string dist_rmse_output_file_;  // 位置に関する評価値の出力ファイルパス
@@ -43,16 +51,17 @@ private:
   // 評価用変数
   int data_num_;                   // データ数
   double dist_squared_error_sum_;  // 位置に関する二乗誤差の合計
-  double dist_rmse_;               // 位置に関する二乗平均平方根誤差（RMSE）
+  std::vector<double> dist_rmse_;  // 位置に関する二乗平均平方根誤差（RMSE）
   double vel_squared_error_sum_;   // 速度に関する二乗誤差の合計
-  double vel_rmse_;                // 速度に関する二乗平均平方根誤差（RMSE）
+  std::vector<double> vel_rmse_;   // 速度に関する二乗平均平方根誤差（RMSE）
   double yaw_squared_error_sum_;   // 方位に関する二乗誤差の合計
-  double yaw_rmse_;                // 方位に関する二乗平均平方根誤差（RMSE）
+  std::vector<double> yaw_rmse_;   // 方位に関する二乗平均平方根誤差（RMSE）
 
   // msgの受け取り判定用
   bool flag_obs_data_ = false;
 
   // ファイル出力の判定用
+  bool flag_output_file_ = false;
 
   // NodeHandle
   ros::NodeHandle nh_;

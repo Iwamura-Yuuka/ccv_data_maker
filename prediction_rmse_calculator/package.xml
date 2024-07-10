@@ -3,7 +3,7 @@
   <name>prediction_rmse_calculator</name>
   <version>0.0.0</version>
   <description>The prediction_rmse_calculator package</description>
-  <maintainer email="amsl@todo.todo">Iwamura Yuuka</maintainer>
+  <maintainer email="user@todo.todo">user</maintainer>
   <license>MIT</license>
 
   <buildtool_depend>catkin</buildtool_depend>

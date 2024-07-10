@@ -1,6 +1,6 @@
 #include "prediction_rmse_calculator/prediction_rmse_calculator.h"
 
-PredictionRmseCalculator::PredictionRmseCalculator():private_nh("~")
+PredictionRmseCalculator::PredictionRmseCalculator():private_nh_("~")
 {
   // param
   private_nh_.param("dist_rmse_output_file", dist_rmse_output_file_, {"/data/dist_rmse_output.csv"});
@@ -10,10 +10,12 @@ PredictionRmseCalculator::PredictionRmseCalculator():private_nh("~")
   private_nh_.param("id", id_, {0});
   private_nh_.param("horizon", horizon_, {1.0});
   private_nh_.param("dt", dt_, {0.1});
-  private_nh_.param("data_num", data_num_, {0});
+  private_nh_.param("start_step", start_step_, {10});
+  private_nh_.param("calc_step", calc_step_, {100});
   private_nh_.param("dist_squared_error_sum", dist_squared_error_sum_, {0.0});
   private_nh_.param("vel_squared_error_sum", vel_squared_error_sum_, {0.0});
   private_nh_.param("yaw_squared_error_sum", yaw_squared_error_sum_, {0.0});
+  private_nh_.param("data_counter", data_counter_, {0});
 
   // subscriber
   sub_obs_data_ = nh_.subscribe("/predicted_state", 1, &PredictionRmseCalculator::obs_data_callback, this, ros::TransportHints().reliable().tcpNoDelay());
@@ -47,32 +49,102 @@ void PredictionRmseCalculator::store_predicted_data()
     state.yaw = obs_data_.data[i+3];
     current_predicted_states.push_back(state);
   }
+
   predicted_states_.push_back(current_predicted_states);  // 予測データを格納
-  data_num_++;                                            // データ数をカウント
 }
 
 // 位置に関する二乗誤差を計算
-void PredictionRmseCalculator::calc_dist_squared_error()
+void PredictionRmseCalculator::calc_dist_squared_error(const double observed_x, const double observed_y, const double predict_x, const double predict_y)
 {
- 
+  const double dist_squared_error = (observed_x - predict_x) * (observed_x - predict_x) + (observed_y - predict_y) * (observed_y - predict_y);
+  dist_squared_error_sum_ += dist_squared_error;
 }
 
 // 速度に関する二乗誤差を計算
-void PredictionRmseCalculator::calc_vel_squared_error()
+void PredictionRmseCalculator::calc_vel_squared_error(const double observed_vel, const double predict_vel)
 {
-  
+  const double vel_squared_error = (observed_vel - predict_vel) * (observed_vel - predict_vel);
+  vel_squared_error_sum_ += vel_squared_error;
 }
 
 // 方位に関する二乗誤差を計算
-void PredictionRmseCalculator::calc_yaw_squared_error()
+void PredictionRmseCalculator::calc_yaw_squared_error(const double observed_yaw, const double predict_yaw)
 {
-  
+  const double yaw_squared_error = normalize_angle(observed_yaw - predict_yaw) * normalize_angle(observed_yaw - predict_yaw);
+  yaw_squared_error_sum_ += yaw_squared_error;
+}
+
+// 適切な角度(-M_PI ~ M_PI)を返す
+double PredictionRmseCalculator::normalize_angle(double theta)
+{
+  if(theta > M_PI)
+    theta -= 2.0 * M_PI;
+  if(theta < -M_PI)
+    theta += 2.0 * M_PI;
+
+  return theta;
 }
 
 // RMSEを計算
 void PredictionRmseCalculator::calc_rmse()
 {
-  // 予測データを格納
+  // 終了ステップを計算
+  int end_step = start_step_ + calc_step_ + (horizon_ / dt_);
+  ROS_INFO_STREAM("end_step = " << end_step);
+
+  if((data_counter_ > 10) && (data_counter_ <= end_step))
+  {
+    // 予測データを格納
+    store_predicted_data();
+  }
+  else if((data_counter_ > end_step) && (flag_output_file_ == false))
+  {
+    int predict_step = horizon_ / dt_;  // 予測ステップ数 
+    // RMSEを計算
+    for(int i=1; i<=predict_step; i++)
+    {
+      // 初期化
+      dist_squared_error_sum_ = 0.0;
+      vel_squared_error_sum_ = 0.0;
+      yaw_squared_error_sum_ = 0.0;
+
+      for(int j=i; j<i+calc_step_; j++)
+      {
+        // 位置に関する二乗誤差を計算
+        calc_dist_squared_error(predicted_states_[j][0].x, predicted_states_[j][0].y, predicted_states_[j-i][i].x, predicted_states_[j-i][i].y);
+
+        // 速度に関する二乗誤差を計算
+        calc_vel_squared_error(predicted_states_[j][0].vel, predicted_states_[j-i][i].vel);
+
+        // 方位に関する二乗誤差を計算
+        calc_yaw_squared_error(predicted_states_[j][0].yaw, predicted_states_[j-i][i].yaw);
+      }
+
+      // 位置に関する二乗平均平方根誤差（RMSE）を計算
+      double dist_rmse = sqrt(dist_squared_error_sum_ / calc_step_);
+      dist_rmse_.push_back(dist_rmse);
+
+      // 速度に関する二乗平均平方根誤差（RMSE）を計算
+      double vel_rmse = sqrt(vel_squared_error_sum_ / calc_step_);
+      vel_rmse_.push_back(vel_rmse);
+
+      // 方位に関する二乗平均平方根誤差（RMSE）を計算
+      double yaw_rmse = sqrt(yaw_squared_error_sum_ / calc_step_);
+      yaw_rmse_.push_back(yaw_rmse);
+      ROS_INFO_STREAM("dist_rmse.size = " << dist_rmse_.size() << ", vel_rmse.size = " << vel_rmse_.size() << ", yaw_rmse.size = " << yaw_rmse_.size());
+    }
+
+    // csvファイルに出力
+    output_csv(dist_rmse_output_file_, dist_rmse_);
+    output_csv(vel_rmse_output_file_, vel_rmse_);
+    output_csv(yaw_rmse_output_file_, yaw_rmse_);
+
+    flag_output_file_ = true;
+    ROS_INFO_STREAM("===== output csv file! =====");
+  }
+
+  data_counter_++;
+  ROS_INFO_STREAM("data_counter_ = " << data_counter_);
 }
 
 // 結果をcsvファイルに出力する
@@ -90,9 +162,9 @@ void PredictionRmseCalculator::output_csv(const std::string output_file, const s
     ROS_WARN_STREAM("can't open file!");
 
   // データをファイルに書き込み
-  
-
-  outputfile.close();
+  for(int i=0; i<rmse.size(); i++)
+    ofs << rmse[i] << ",";
+  ofs << std::endl;
 }
 
 // メイン文で実行する関数

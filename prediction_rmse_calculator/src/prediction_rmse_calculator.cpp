@@ -162,6 +162,7 @@ void PredictionRmseCalculator::output_csv(const std::string output_file, const s
     ROS_WARN_STREAM("can't open file!");
 
   // データをファイルに書き込み
+  ofs << id_ << ",";
   for(int i=0; i<rmse.size(); i++)
     ofs << rmse[i] << ",";
   ofs << std::endl;

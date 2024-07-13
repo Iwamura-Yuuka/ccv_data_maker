@@ -33,7 +33,7 @@ void PredictionRmseCalculator::store_predicted_data()
 {
   std::vector<State> current_predicted_states;
   
-  ROS_INFO_STREAM("obs_data_.data.size() = " << obs_data_.data.size());  // デバック用
+  // ROS_INFO_STREAM("obs_data_.data.size() = " << obs_data_.data.size());  // デバック用
 
   // 評価するidに対応する障害物情報の最初と最後のインデックスを計算
   int stored_step_num = (horizon_ / dt_) + 1;  //保管されてる情報のステップ数（現在情報＋予測情報）
@@ -90,7 +90,6 @@ void PredictionRmseCalculator::calc_rmse()
 {
   // 終了ステップを計算
   int end_step = start_step_ + calc_step_ + (horizon_ / dt_);
-  ROS_INFO_STREAM("end_step = " << end_step);
 
   if((data_counter_ > 10) && (data_counter_ <= end_step))
   {
@@ -131,7 +130,6 @@ void PredictionRmseCalculator::calc_rmse()
       // 方位に関する二乗平均平方根誤差（RMSE）を計算
       double yaw_rmse = sqrt(yaw_squared_error_sum_ / calc_step_);
       yaw_rmse_.push_back(yaw_rmse);
-      ROS_INFO_STREAM("dist_rmse.size = " << dist_rmse_.size() << ", vel_rmse.size = " << vel_rmse_.size() << ", yaw_rmse.size = " << yaw_rmse_.size());
     }
 
     // csvファイルに出力
@@ -140,11 +138,11 @@ void PredictionRmseCalculator::calc_rmse()
     output_csv(yaw_rmse_output_file_, yaw_rmse_);
 
     flag_output_file_ = true;
+    ROS_INFO_STREAM("id : " << id_);
     ROS_INFO_STREAM("===== output csv file! =====");
   }
 
   data_counter_++;
-  ROS_INFO_STREAM("data_counter_ = " << data_counter_);
 }
 
 // 結果をcsvファイルに出力する

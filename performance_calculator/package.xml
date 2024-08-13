@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>performance_calculator</name>
+  <version>0.0.0</version>
+  <description>The performance_calculator package</description>
+  <maintainer email="user@todo.todo">Iwamura Yuuka</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>roscpp</depend>
+  <depend>std_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>pedsim_msgs</depend>
+
+</package>

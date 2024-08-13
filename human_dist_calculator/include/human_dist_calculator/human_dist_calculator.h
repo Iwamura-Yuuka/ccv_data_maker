@@ -48,6 +48,10 @@ private:
 
     // 衝突判定用
     std::vector<int> collision_id_;  // 衝突した歩行者のid格納用
+
+    // 1ステップ前のロボットの位置情報格納用
+    double tmp_robot_x_;
+    double tmp_robot_y_;
     
     // msgの受け取り判定用
     bool flag_ped_states_ = false;

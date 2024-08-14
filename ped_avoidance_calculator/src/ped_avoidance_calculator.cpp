@@ -18,6 +18,13 @@ PedAvoidanceCaluculator::PedAvoidanceCaluculator():private_nh_("~")
 // 歩行者データのコールバック関数
 void PedAvoidanceCaluculator::pedestrian_data_callback(const pedsim_msgs::AgentStatesConstPtr& agents)
 {
+    while(ped_states_.size() > 0)
+    {
+        // ped_states_の配列のうち取得済みのデータ（配列の先頭の要素）を削除
+        // これをしないと，front() でデータを取得する際，同じデータしか取得できない
+        ped_states_.pop();
+    }
+
     ped_states_.emplace(agents);
     flag_ped_states_ = true;
 }
@@ -67,10 +74,6 @@ void PedAvoidanceCaluculator::calc_avoidance()
             }
         }
     }
-
-    // ped_states_の配列のうち取得済みのデータ（配列の先頭の要素）を削除
-    // これをしないと，front() でデータを取得する際，同じデータしか取得できない
-    ped_states_.pop();
 }
 
 // 結果をcsvファイルに出力

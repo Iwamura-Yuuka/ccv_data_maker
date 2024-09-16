@@ -1,0 +1,12 @@
+# 出力ファイルパス
+output_file: "/ws/src/ccv_data_maker/speed_and_ped_state_calculator/data/test.csv"
+
+# 制御周波数[Hz]
+hz: 10               # ループ周波数 [Hz]
+
+# 計測位置
+start_x: 0.0  # 計測を開始するx座標 [m]
+goal_x: 18.0  # 計測を終了するx座標 [m]
+
+# 衝突判定
+count_dist: 1.5  # 歩行者人数をカウントする基準となるるロボットと歩行者の距離

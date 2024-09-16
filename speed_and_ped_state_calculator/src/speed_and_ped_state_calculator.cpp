@@ -39,8 +39,8 @@ void SpeedAndPedCalculator::robot_odom_callback(const nav_msgs::Odometry::ConstP
 // local_goalコールバック関数
 void SpeedAndPedCalculator::local_goal_callback(const geometry_msgs::PointStampedConstPtr& msg)
 {
-    local_goal_ = *msg;
-    flag_local_goal_ = true;
+  local_goal_ = *msg;
+  flag_local_goal_ = true;
 }
 
 // ロボットと歩行者の間の距離を計算
@@ -55,12 +55,12 @@ double SpeedAndPedCalculator::calc_distance(const double robot_x, const double r
 // 適切な角度(-M_PI ~ M_PI)を返す
 double SpeedAndPedCalculator::normalize_angle(double theta)
 {
-    if(theta > M_PI)
-        theta -= 2.0 * M_PI;
-    if(theta < -M_PI)
-        theta += 2.0 * M_PI;
+  if(theta > M_PI)
+    theta -= 2.0 * M_PI;
+  if(theta < -M_PI)
+    theta += 2.0 * M_PI;
 
-    return theta;
+  return theta;
 }
 
 // ロボットと歩行者の距離を計算

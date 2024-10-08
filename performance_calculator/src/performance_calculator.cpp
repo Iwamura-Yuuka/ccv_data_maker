@@ -138,7 +138,7 @@ void PerformanceCalculator::display_data()
     travel_time_ += 1.0 / (double)hz_;
 
     // 60秒経過してもゴールに到達しない場合，走行失敗とする
-    if((robot_odom_.pose.pose.position.x > 1.0) && (travel_time_ > (60.0 * (goal_x_ - start_x_) / 20.0)))
+    if((robot_odom_.pose.pose.position.x > 1.0) && (travel_time_ > (60.0 * (goal_x_ - start_x_) / 20.0)) && (flag_output_file_ == false))
     {
       flag_goal_ = false;
       ROS_ERROR_STREAM("goal : " << flag_goal_);
@@ -158,32 +158,37 @@ void PerformanceCalculator::display_data()
     // 走行時の平均速度を計算
     average_speed_ = mileage_ / travel_time_;
 
-    // 完走できたかの判定
+    // データをcsvファイルに出力
     if(flag_output_file_ == false)
     {
+      // 完走できたかの判定
       // 衝突回数が0回の場合，完走とする
       if(collision_id_.size() > 0)
         flag_goal_ = false;
       else
         flag_goal_ = true;
-        
-    }
 
-    // データを表示
-    ROS_INFO_STREAM("mean of min dist : " << min_dist_mean_ << "m");      // 最小値の平均
-    ROS_INFO_STREAM("min dist : " << all_min_dist_ << "m");               // 最小値
-    ROS_ERROR_STREAM("collision : " << collision_id_.size() << "times");  // 衝突回数
-    ROS_INFO_STREAM("mileage : " << mileage_ << "m");                     // 走行距離
-    ROS_INFO_STREAM("travel time : " << travel_time_ << "s");             // 走行時間
-    ROS_INFO_STREAM("average speed : " << average_speed_ << "m/s");       // 平均速度
-    ROS_INFO_STREAM("goal : " << flag_goal_);                             // 完走できたか
-
-    // データをcsvファイルに出力
-    if(flag_output_file_ == false)
-    {
+      // データをcsvファイルに出力
       output_csv();
       flag_output_file_ = true;
     }
+
+    // データを表示
+    ROS_INFO_STREAM_THROTTLE(1.0, "mean of min dist : " << min_dist_mean_ << "m");      // 最小値の平均
+    ROS_INFO_STREAM_THROTTLE(1.0, "min dist : " << all_min_dist_ << "m");               // 最小値
+    ROS_ERROR_STREAM_THROTTLE(1.0, "collision : " << collision_id_.size() << "times");  // 衝突回数
+    ROS_INFO_STREAM_THROTTLE(1.0, "mileage : " << mileage_ << "m");                     // 走行距離
+    ROS_INFO_STREAM_THROTTLE(1.0, "travel time : " << travel_time_ << "s");             // 走行時間
+    ROS_INFO_STREAM_THROTTLE(1.0, "average speed : " << average_speed_ << "m/s");       // 平均速度
+    ROS_INFO_STREAM_THROTTLE(1.0, "goal : " << flag_goal_);                             // 完走できたか
+
+    // ROS_INFO_STREAM("mean of min dist : " << min_dist_mean_ << "m");      // 最小値の平均
+    // ROS_INFO_STREAM("min dist : " << all_min_dist_ << "m");               // 最小値
+    // ROS_ERROR_STREAM("collision : " << collision_id_.size() << "times");  // 衝突回数
+    // ROS_INFO_STREAM("mileage : " << mileage_ << "m");                     // 走行距離
+    // ROS_INFO_STREAM("travel time : " << travel_time_ << "s");             // 走行時間
+    // ROS_INFO_STREAM("average speed : " << average_speed_ << "m/s");       // 平均速度
+    // ROS_INFO_STREAM("goal : " << flag_goal_);                             // 完走できたか
   }
 }
 

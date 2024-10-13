@@ -17,6 +17,6 @@
   <node pkg="rviz" type="rviz" name="planner_rviz" args="-d $(arg rviz_settings)"/>
 
   <!-- bag play -->
-  <node pkg="rosbag" type="play" name="play" args="$(env HOME)/bagfiles/ped_data/25ped/1.bag --clock" required="true"/>
+  <node pkg="rosbag" type="play" name="play" args="$(env HOME)/bagfiles/ped_data/50ped/1.bag --clock" required="true"/>
 
 </launch>

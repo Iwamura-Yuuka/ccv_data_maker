@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- config file path -->
+  <arg name="rviz_settings" default="$(find step_by_step_predictor)/config/rviz/debug.rviz"/>
+  <arg name="step_by_step_predictor_settings" default="$(find step_by_step_predictor)/config/param/mode0.yaml"/>
+  <arg name="prediction_rmse_calculator_settings" default="$(find prediction_rmse_calculator)/config/param/xy_prediction_rmse_calculator.yaml"/>
+
+  <!-- node launch -->
+  <node pkg="step_by_step_predictor" type="step_by_step_predictor_node" name="step_by_step_predictor">
+    <rosparam command="load" file="$(arg step_by_step_predictor_settings)"/>
+  </node>
+  <node pkg="prediction_rmse_calculator" type="xy_prediction_rmse_calculator_node" name="xy_prediction_rmse_calculator" output="screen">
+    <rosparam command="load" file="$(arg prediction_rmse_calculator_settings)"/>
+  </node>
+
+  <!-- rviz -->
+  <node pkg="rviz" type="rviz" name="planner_rviz" args="-d $(arg rviz_settings)"/>
+
+  <!-- bag play -->
+  <node pkg="rosbag" type="play" name="play" args="$(env HOME)/bagfiles/ped_data/50ped/1.bag --clock" required="true"/>
+
+</launch>

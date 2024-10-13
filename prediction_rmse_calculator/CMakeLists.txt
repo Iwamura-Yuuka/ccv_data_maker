@@ -27,3 +27,8 @@ add_library(${PROJECT_NAME} src/prediction_rmse_calculator.cpp)
 add_executable(${PROJECT_NAME}_node src/prediction_rmse_calculator_node.cpp)
 add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(${PROJECT_NAME}_node ${PROJECT_NAME} ${catkin_LIBRARIES})
+
+add_library(xy_prediction_rmse_calculator src/xy_prediction_rmse_calculator.cpp)
+add_executable(xy_prediction_rmse_calculator_node src/xy_prediction_rmse_calculator_node.cpp)
+add_dependencies(xy_prediction_rmse_calculator_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(xy_prediction_rmse_calculator_node xy_prediction_rmse_calculator ${catkin_LIBRARIES})

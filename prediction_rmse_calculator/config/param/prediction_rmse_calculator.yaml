@@ -4,7 +4,7 @@ vel_rmse_output_file: "/ws/src/data_matomerun/prediction_accuracy/data/50ped/mod
 yaw_rmse_output_file: "/ws/src/data_matomerun/prediction_accuracy/data/50ped/mode0/yaw.csv"
 
 # 制御周波数[Hz]
-hz: 10                          # ループ周波数 [Hz]
+hz: 10          # ループ周波数 [Hz]
 
 # 障害物id
 id: 0

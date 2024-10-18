@@ -38,7 +38,7 @@ private:
   void calc_vel_squared_error(const double observed_vel, const double predict_vel);                                                // 速度に関する二乗誤差を計算
   void calc_yaw_squared_error(const double observed_yaw, const double predict_yaw);                                                // 方位に関する二乗誤差を計算
   double normalize_angle(double theta);                                                                                            // 適切な角度(-M_PI ~ M_PI)を返す
-  void output_csv(const std::string output_file, const std::vector<double> rmse);  // 結果をcsvファイルに出力する
+  void output_csv(const std::string output_file, const std::vector<double> rmse);                                                  // 結果をcsvファイルに出力する
 
   // yamlファイルで設定可能な変数
   std::string dist_rmse_output_file_;  // 位置に関する評価値の出力ファイルパス

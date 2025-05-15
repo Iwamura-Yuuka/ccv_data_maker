@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(speed_and_ped_state_calculator)
 
-add_compile_options(-std=c++11 -O3 -g -Wall)
+# add_compile_options(-std=c++11 -O3 -g -Wall)
+add_compile_options(-std=c++17 -O3 -g -Wall)
 
 find_package(catkin REQUIRED COMPONENTS
 roscpp
